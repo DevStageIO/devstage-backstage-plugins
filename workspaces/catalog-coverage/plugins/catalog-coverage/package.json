@@ -48,10 +48,13 @@
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack"
   },
+  "//": "@material-ui/lab and react-use are dependencies, not peers: a stock create-app packages/app provides @material-ui/core, @material-ui/icons and react-router-dom but neither of those two, so as peers they resolve to nothing in a fresh consumer. They are also not app-level singletons, so a private copy is harmless.",
   "dependencies": {
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-catalog-import": "backstage:^",
-    "@backstage/plugin-catalog-react": "backstage:^"
+    "@backstage/plugin-catalog-react": "backstage:^",
+    "@material-ui/lab": "4.0.0-alpha.61",
+    "react-use": "^17.5.0"
   },
   "peerDependencies": {
     "@backstage/core-components": "^0.18.10",
@@ -59,10 +62,8 @@
     "@backstage/theme": "^0.7.3",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "4.0.0-alpha.61",
     "react": "^18.0.2",
-    "react-router-dom": "^6.3.0",
-    "react-use": "^17.5.0"
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@backstage/catalog-client": "backstage:^",

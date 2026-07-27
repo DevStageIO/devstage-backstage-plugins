@@ -52,7 +52,26 @@ Every write happens server-side and is gated by an owner allowlist — see
 
 ## 1. Install
 
-Both packages, into their respective workspaces of your Backstage app:
+### Prerequisite: your app must use the legacy frontend system
+
+This plugin is a legacy-frontend-system plugin (see [Compatibility](#compatibility)).
+As of Backstage 1.53, `npx @backstage/create-app` scaffolds the **new** frontend system
+by default — an `App.tsx` that calls `createApp({ features: [...] })`, with no
+`<FlatRoutes>` and no `packages/app/src/components/Root/Root.tsx`. The wiring in §2
+has nothing to attach to in such an app.
+
+For a new app, pass `--legacy`:
+
+```bash
+npx @backstage/create-app@latest --legacy
+```
+
+An existing new-frontend-system app can in principle mount this page through
+`@backstage/core-compat-api`, but that path is untested here — treat it as unsupported.
+
+### Add the packages
+
+Both, into their respective workspaces of your Backstage app:
 
 ```bash
 yarn --cwd packages/app add @devstage/backstage-plugin-catalog-coverage
@@ -96,6 +115,21 @@ backend.add(import('@devstage/backstage-plugin-catalog-coverage-backend'));
 
 Full backend details — endpoints, how detection works, rate limiting — are in the
 [backend README](../catalog-coverage-backend/README.md).
+
+### Verify
+
+```bash
+yarn start
+curl localhost:7007/api/catalog-coverage/health   # {"status":"ok"}
+```
+
+Then open <http://localhost:3000/catalog-coverage>.
+
+**An empty table on a stock `create-app` project is the expected result, not a broken
+install.** That template registers only local example files as catalog Locations, and
+this plugin projects *registered Locations*, so it has nothing to report until a
+discovery provider (`catalog.providers.github.*`) is configured. The header rendering
+`0 / 0 — 0% covered` means the page and its backend are wired correctly.
 
 ## 4. Configuration
 
