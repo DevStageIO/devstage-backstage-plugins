@@ -71,9 +71,12 @@ describe('PluginErrorPanel (production mode)', () => {
       </TestApiProvider>,
     );
 
+  // Backstage's WarningPanel prefixes the title with the severity, so the
+  // heading reads "Error: Backend not available" in a single text node —
+  // these assertions match on the classified part, not the whole string.
   it('renders classified title for network error', () => {
     renderInProd(new TypeError('Failed to fetch'));
-    expect(screen.getByText('Backend not available')).toBeInTheDocument();
+    expect(screen.getByText(/Backend not available/)).toBeInTheDocument();
   });
 
   it('renders friendly description for network error', () => {
@@ -83,12 +86,12 @@ describe('PluginErrorPanel (production mode)', () => {
 
   it('renders classified title for unexpected error', () => {
     renderInProd(new Error('boom'));
-    expect(screen.getByText('Unexpected error')).toBeInTheDocument();
+    expect(screen.getByText(/Unexpected error/)).toBeInTheDocument();
   });
 
   it('handles non-Error value without crashing', () => {
     renderInProd('raw string error');
-    expect(screen.getByText('Unexpected error')).toBeInTheDocument();
+    expect(screen.getByText(/Unexpected error/)).toBeInTheDocument();
   });
 
   it('renders "Authentication error" title for HTTP 401', async () => {
@@ -96,7 +99,7 @@ describe('PluginErrorPanel (production mode)', () => {
       new Response('Unauthorized', { status: 401 }),
     );
     renderInProd(error);
-    expect(screen.getByText('Authentication error')).toBeInTheDocument();
+    expect(screen.getByText(/Authentication error/)).toBeInTheDocument();
   });
 
   it('renders friendly description for HTTP 401', async () => {
@@ -114,6 +117,6 @@ describe('PluginErrorPanel (production mode)', () => {
       new Response('Internal Server Error', { status: 500 }),
     );
     renderInProd(error);
-    expect(screen.getByText('Server error (HTTP 500)')).toBeInTheDocument();
+    expect(screen.getByText(/Server error \(HTTP 500\)/)).toBeInTheDocument();
   });
 });
