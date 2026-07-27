@@ -1,0 +1,1 @@
+{ "name": "my-ts-service", "version": "1.0.0", "bin": { "server": "./dist/server.js" }, "dependencies": { "express": "^4.18.0" } }

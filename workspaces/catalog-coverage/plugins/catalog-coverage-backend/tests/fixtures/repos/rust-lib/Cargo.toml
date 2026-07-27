@@ -1,0 +1,7 @@
+[package]
+name = "my-rust-lib"
+version = "0.1.0"
+
+[lib]
+name = "my_rust_lib"
+crate-type = ["lib"]
