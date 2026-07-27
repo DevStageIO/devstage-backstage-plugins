@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { TestApiProvider, mockApis } from '@backstage/test-utils';
+import {
+  MockErrorApi,
+  TestApiProvider,
+  mockApis,
+} from '@backstage/test-utils';
 import { translationApiRef } from '@backstage/core-plugin-api/alpha';
+import { errorApiRef } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import { PluginErrorPanel } from './PluginErrorPanel';
 
@@ -51,9 +56,17 @@ describe('PluginErrorPanel (production mode)', () => {
     });
   });
 
+  // Backstage's own ErrorPanel renders a CopyTextButton, which resolves
+  // errorApiRef — so the production path needs it even though nothing here
+  // posts an error.
   const renderInProd = (error: unknown) =>
     render(
-      <TestApiProvider apis={[[translationApiRef, mockApis.translation()]]}>
+      <TestApiProvider
+        apis={[
+          [translationApiRef, mockApis.translation()],
+          [errorApiRef, new MockErrorApi()],
+        ]}
+      >
         <PluginErrorPanel error={error} />
       </TestApiProvider>,
     );
