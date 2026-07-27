@@ -7,7 +7,7 @@ Open-source [Backstage](https://backstage.io) plugins published under the
 
 | Workspace                                          | Packages                                                                 | Status  |
 | -------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
-| [`catalog-coverage`](workspaces/catalog-coverage/) | `@devstage/backstage-plugin-catalog-coverage`, `…-catalog-coverage-backend` | Pending |
+| [`catalog-coverage`](workspaces/catalog-coverage/) | `@devstage/backstage-plugin-catalog-coverage`, `…-catalog-coverage-backend` | Unreleased |
 
 `catalog-coverage` answers a question every Backstage adopter hits early: _which of our
 repositories are actually in the catalog, and what is missing from the ones that are not?_
@@ -41,12 +41,12 @@ yarn install
 yarn tsc
 yarn lint:all
 yarn test
+yarn build:api-reports
 ```
 
-`plugins/` is still empty, so `yarn tsc` currently exits with `TS18003: No inputs were
-found` — TypeScript will not accept a project that matches no files. That is expected until
-the first plugin lands; CI skips the build steps while the directory is empty and the guard
-is removed together with this paragraph.
+`report.api.md` next to each package is the reviewable record of its public API. It is
+generated, committed, and checked in CI — a change to an exported symbol shows up as a diff
+there, so regenerate it in the same commit that changes the API.
 
 ## Releasing
 
