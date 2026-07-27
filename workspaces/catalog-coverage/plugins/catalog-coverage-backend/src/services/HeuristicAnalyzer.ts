@@ -78,9 +78,16 @@ const parsePackageSignals = (
  */
 export class HeuristicAnalyzer {
   private readonly token: string | undefined;
+  private readonly defaultOwner: string | undefined;
 
-  constructor(token?: string) {
+  /**
+   * @param token - GitHub token for the signal fetches.
+   * @param defaultOwner - `catalogCoverage.defaultOwner.ref`, written as
+   *   `spec.owner` in the generated suggestion. Unset leaves a TODO.
+   */
+  constructor(token?: string, defaultOwner?: string) {
     this.token = token;
+    this.defaultOwner = defaultOwner;
   }
 
   /**
@@ -132,6 +139,7 @@ export class HeuristicAnalyzer {
       signals.detectedName,
       signals.detectedType,
       signals.detectedLifecycle,
+      this.defaultOwner,
     );
 
     return { yaml: yamlStr, signals };

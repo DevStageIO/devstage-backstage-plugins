@@ -18,7 +18,7 @@ import { CodeSnippet, Link, MarkdownContent } from '@backstage/core-components';
 import { DEFAULT_PR_BODY } from '../lib/OnboardingOrchestrator';
 
 const ORCHESTRATOR_SOURCE_URL =
-  'https://github.com/zentala/backstage/blob/main/plugins/catalog-coverage/src/lib/OnboardingOrchestrator.ts';
+  'https://github.com/DevStageIO/devstage-backstage-plugins/blob/main/workspaces/catalog-coverage/plugins/catalog-coverage/src/lib/OnboardingOrchestrator.ts';
 
 interface BulkConfirmationPhaseProps {
   repos: Array<{ owner: string; repo: string }>;

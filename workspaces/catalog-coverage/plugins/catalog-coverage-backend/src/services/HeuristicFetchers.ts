@@ -7,8 +7,13 @@ import * as yaml from 'js-yaml';
 import { RepoMeta as FullRepoMeta } from '../service/repoMetaFetcher';
 import { GITHUB_API, buildReadHeaders } from '../service/githubClient';
 
-/** @internal */
-export const PHASE1_OWNER = 'zentala';
+/**
+ * Owner written into a generated suggestion when `catalogCoverage.defaultOwner`
+ * is not configured. A suggestion is edited before it is committed, so an
+ * explicit TODO is the honest default — inventing an owner would write a wrong
+ * one into someone else's repository.
+ */
+export const FALLBACK_OWNER = 'TODO: a Group or User in your catalog';
 
 /** Maximum characters extracted from a README for LLM enrichment. */
 export const README_EXCERPT_MAX_CHARS = 2000;
@@ -132,6 +137,7 @@ export const buildYaml = (
   name: string,
   type: string | 'ambiguous',
   lifecycle: string,
+  ownerRef: string = FALLBACK_OWNER,
 ): string => {
   const typeComment = '# TODO: pick one — service|library|website';
 
@@ -149,7 +155,7 @@ export const buildYaml = (
     spec: {
       type: type === 'ambiguous' ? 'service' : type,
       lifecycle,
-      owner: PHASE1_OWNER,
+      owner: ownerRef,
     },
   };
 

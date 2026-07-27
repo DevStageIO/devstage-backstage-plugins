@@ -34,7 +34,7 @@ const stripUrlPrefix = (value: string): string =>
  * Bare repo URLs and non-GitHub hosts intentionally return `undefined`.
  *
  * Example input:
- *   https://github.com/zentala/big-monorepo/blob/main/catalog-info.yaml
+ *   https://github.com/acme-corp/big-monorepo/blob/main/catalog-info.yaml
  */
 export const parseGithubBlobUrl = (
   target: string,

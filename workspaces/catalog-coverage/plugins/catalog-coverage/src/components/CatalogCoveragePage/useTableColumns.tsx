@@ -1,5 +1,5 @@
 /**
- * useTableColumns — column definitions for the GitHub Catalog Info coverage table.
+ * useTableColumns — column definitions for the catalog coverage table.
  *
  * Extracted to keep CatalogCoveragePage under the 250-line limit.
  * Rich cells are in LocationSourceCell.tsx and EnrichedStatusCell.tsx.

@@ -11,12 +11,18 @@ import { MOCK_REPOS_RESPONSE } from '../src/data/mockRepos';
 import { ReposResponse } from '../src/data/types';
 
 /**
- * Set to run the page against fixtures instead of the dev backend — useful
- * offline, or when working on the table itself. The default is the real
- * client, because a harness that never calls the backend cannot catch a
- * contract break between the two packages.
+ * Append `?mock=1` to the page URL to run against fixtures instead of the dev
+ * backend — useful offline, or when working on the table itself. The default
+ * is the real client, because a harness that never calls the backend cannot
+ * catch a contract break between the two packages.
+ *
+ * Deliberately a query param and not an env var: `backstage-cli` replaces
+ * `process.env.X` at build time and forwards nothing but its own allowlist, so
+ * an env-var toggle here compiles to `undefined === 'true'` and can never be
+ * switched on.
  */
-const USE_MOCK_API = process.env.CATALOG_COVERAGE_DEV_MOCK === 'true';
+const isMockEnabled = () =>
+  new URLSearchParams(window.location.search).get('mock') === '1';
 
 const mockApi: CatalogCoverageApi = {
   listRepos: async (): Promise<ReposResponse> => MOCK_REPOS_RESPONSE,
@@ -64,7 +70,7 @@ export const buildDevApp = () => {
       new CatalogClient({ discoveryApi, fetchApi }),
   });
 
-  if (USE_MOCK_API) {
+  if (isMockEnabled()) {
     app.registerApi({
       api: catalogCoverageApiRef,
       deps: {},

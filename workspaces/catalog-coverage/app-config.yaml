@@ -21,15 +21,20 @@ backend:
     connection: ':memory:'
 
 # The plugin projects catalog Locations into coverage rows, so the harness
-# needs some. These are public repositories, deliberately: one that has a
-# catalog-info.yaml (renders as `present`) and one that does not (renders as
-# `missing`), which is the pair of states the page exists to show.
+# needs some. This one is a public repository that really has a
+# catalog-info.yaml, and renders as `present`.
+#
+# You cannot produce a `missing` row from this list: a static `catalog.locations`
+# entry whose target 404s never becomes a Location entity at all, so there is
+# nothing for the plugin to project. Only a provider
+# (`catalog.providers.github.*` with `validateLocationsExist: false`) registers
+# Locations for files that are absent — which is exactly the case the plugin
+# exists to surface. Open the harness page with `?mock=1` to
+# see `missing` and `invalid` rows without configuring a provider.
 catalog:
   locations:
     - type: url
       target: https://github.com/backstage/backstage/blob/master/catalog-info.yaml
-    - type: url
-      target: https://github.com/backstage/community-plugins/blob/main/catalog-info.yaml
 
 catalogCoverage:
   # A GitHub token is optional for reading the coverage table and required for

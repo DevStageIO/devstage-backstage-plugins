@@ -262,7 +262,21 @@ describe('HeuristicAnalyzer', () => {
       const { yaml } = await analyzer.analyze('zentala', 'empty-repo');
       expect(yaml).toContain('apiVersion: backstage.io/v1alpha1');
       expect(yaml).toContain('kind: Component');
-      expect(yaml).toContain('owner: zentala');
+    });
+
+    it('leaves a TODO owner when no default owner is configured', async () => {
+      const { yaml } = await analyzer.analyze('acme-corp', 'empty-repo');
+      expect(yaml).toContain('TODO: a Group or User in your catalog');
+    });
+
+    it('writes the configured default owner as spec.owner', async () => {
+      // The repo owner and `catalogCoverage.defaultOwner.ref` are different
+      // things: the suggestion must carry the configured catalog owner, never
+      // the GitHub org the repository happens to live in.
+      const configured = new HeuristicAnalyzer(undefined, 'platform-team');
+      const { yaml } = await configured.analyze('acme-corp', 'empty-repo');
+      expect(yaml).toContain('owner: platform-team');
+      expect(yaml).not.toContain('TODO: a Group or User');
     });
   });
 });

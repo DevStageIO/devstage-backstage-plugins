@@ -69,10 +69,11 @@ export const createRouter = async (
     llmAnalyzer,
     defaultPrTitle,
     defaultPrBody,
+    defaultOwner,
     maxConcurrency,
   } = options;
   const probe = new UrlProbe({ urlReader, logger, fetchDefaultBranch });
-  const analyzer = new HeuristicAnalyzer(githubToken);
+  const analyzer = new HeuristicAnalyzer(githubToken, defaultOwner?.ref);
   const validator = new SchemaValidator();
   const accountTypeResolver = new AccountTypeResolver(githubToken);
   const repoMetaCache = new RepoMetaCache();

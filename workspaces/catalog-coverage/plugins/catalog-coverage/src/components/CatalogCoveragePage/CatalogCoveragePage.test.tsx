@@ -42,7 +42,7 @@ const buildMockApi = (
   }),
   getSuggestionsBatch: async () => [],
   onboardRepo: jest.fn().mockResolvedValue({
-    link: 'https://github.com/zentala/test/pull/1',
+    link: 'https://github.com/acme-corp/test/pull/1',
     location: '',
   }),
   refreshSuggestion: jest.fn().mockResolvedValue({
@@ -82,21 +82,21 @@ describe('CatalogCoveragePage', () => {
 
   it('renders the page header', async () => {
     await renderWithApi(buildMockApi());
-    expect(await screen.findByText('GitHub Catalog Info')).toBeInTheDocument();
+    expect(await screen.findByText('Catalog Coverage')).toBeInTheDocument();
   });
 
   it('renders rows returned by the API', async () => {
     await renderWithApi(buildMockApi());
     // Source column renders "org/repo" format
-    expect(await screen.findByText('zentala/backstage')).toBeInTheDocument();
-    expect(screen.getByText('zentala/chrome-extension')).toBeInTheDocument();
+    expect(await screen.findByText('acme-corp/payments-api')).toBeInTheDocument();
+    expect(screen.getByText('acme-corp/web-storefront')).toBeInTheDocument();
   });
 
   it('renders org column data in the table', async () => {
     await renderWithApi(buildMockApi());
     // Organization is now a hidden column used by the table's built-in filter toolbar.
     // Verify the org/name values render correctly in the Location Source column.
-    expect(await screen.findByText('zentala/backstage')).toBeInTheDocument();
+    expect(await screen.findByText('acme-corp/payments-api')).toBeInTheDocument();
   });
 
   it('shows a branch-mismatch hint when present on a row', async () => {
@@ -130,7 +130,7 @@ describe('CatalogCoveragePage', () => {
       jest.spyOn(window, 'open').mockReturnValue(win as unknown as Window);
       const user = userEvent.setup();
       await renderWithApi(buildMockApi());
-      await screen.findByText('zentala/mdpad');
+      await screen.findByText('acme-corp/notification-worker');
       await user.click(
         screen.getAllByLabelText(/pre-filled with AI suggestion/i)[0],
       );
@@ -148,7 +148,7 @@ describe('CatalogCoveragePage', () => {
           getSuggestion: jest.fn().mockRejectedValue(new Error('network')),
         }),
       );
-      await screen.findByText('zentala/mdpad');
+      await screen.findByText('acme-corp/notification-worker');
       await user.click(
         screen.getAllByLabelText(/pre-filled with AI suggestion/i)[0],
       );

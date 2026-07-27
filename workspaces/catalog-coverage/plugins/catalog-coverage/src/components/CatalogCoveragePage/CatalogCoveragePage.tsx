@@ -131,7 +131,7 @@ export const CatalogCoveragePage = () => {
   return (
     <Page themeId="tool">
       <Header
-        title="GitHub Catalog Info"
+        title="Catalog Coverage"
         subtitle="catalog-info.yaml coverage across registered Locations"
       >
         <HeaderLabel label="Coverage" value={`${coveragePct}%`} />

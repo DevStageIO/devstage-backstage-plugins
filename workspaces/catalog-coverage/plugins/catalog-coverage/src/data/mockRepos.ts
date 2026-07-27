@@ -2,9 +2,9 @@ import { Org, Repo, ReposResponse } from './types';
 
 export const MOCK_ORGS: Array<Org> = [
   {
-    login: 'zentala',
-    displayName: 'Zentala Innovation Agency',
-    htmlUrl: 'https://github.com/zentala',
+    login: 'acme-corp',
+    displayName: 'Acme Corp',
+    htmlUrl: 'https://github.com/acme-corp',
   },
   {
     login: 'devstage-io',
@@ -55,19 +55,19 @@ const buildRepo = (
 };
 
 export const MOCK_REPOS: Array<Repo> = [
-  buildRepo('zentala', 'backstage', 'present', {
+  buildRepo('acme-corp', 'payments-api', 'present', {
     commitCount: 1247,
     defaultBranch: 'main',
   }),
-  buildRepo('zentala', 'chrome-extension', 'present', {
+  buildRepo('acme-corp', 'web-storefront', 'present', {
     commitCount: 384,
     defaultBranch: 'main',
   }),
-  buildRepo('zentala', 'mdpad', 'missing', {
+  buildRepo('acme-corp', 'notification-worker', 'missing', {
     commitCount: 59,
     defaultBranch: 'main',
   }),
-  buildRepo('zentala', 'old-experiment', 'missing', {
+  buildRepo('acme-corp', 'legacy-batch-jobs', 'missing', {
     branchMismatch: { expectedBranch: 'main', actualDefaultBranch: 'master' },
     commitCount: 12,
     defaultBranch: 'master',

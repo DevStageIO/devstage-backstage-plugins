@@ -1,5 +1,5 @@
 /**
- * ActionsCell — per-row action buttons for the GitHub Catalog Info coverage table.
+ * ActionsCell — per-row action buttons for the catalog coverage table.
  *
  * Renders icon buttons depending on the repo's status kind:
  * - Open repo (always)
