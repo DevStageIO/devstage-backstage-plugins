@@ -1,0 +1,25 @@
+name: Release
+
+# Stub — wired up in E016-T05.
+#
+# The intended shape, per ADR 020:
+#   - changesets opens and maintains a "Version Packages" pull request
+#   - merging it publishes, using npm OIDC trusted publishing (id-token: write),
+#     so no long-lived npm token exists in this repository's secrets
+#   - the publish is *staged*; a maintainer completes it with a 2FA challenge,
+#     so compromised CI can stage a release but cannot ship one
+#
+# Until T05 lands, this workflow only runs on demand and does nothing, so that
+# no half-configured automation can publish by accident.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  noop:
+    name: Not configured yet
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Release automation is not configured yet — see E016-T05."
+          exit 1

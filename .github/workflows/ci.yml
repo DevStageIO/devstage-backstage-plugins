@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workspace:
+    name: ${{ matrix.workspace }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace: [catalog-coverage]
+    defaults:
+      run:
+        working-directory: workspaces/${{ matrix.workspace }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+          cache-dependency-path: workspaces/${{ matrix.workspace }}/yarn.lock
+
+      # Until E016-T03 lands the plugins, `plugins/*` is empty and TypeScript
+      # refuses a project with no inputs (TS18003). The skeleton is committed
+      # first on purpose — CI, the leak gate and the release stub are reviewed
+      # before any plugin code arrives. Delete this step and the `if:` guards
+      # below in the same commit that adds the first plugin.
+      - name: Detect plugins
+        id: probe
+        run: |
+          if compgen -G 'plugins/*/package.json' > /dev/null; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::no plugins yet — skipping build steps (E016-T03)"
+          fi
+        shell: bash
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Type check
+        if: steps.probe.outputs.found == 'true'
+        run: yarn tsc
+
+      - name: Lint
+        if: steps.probe.outputs.found == 'true'
+        run: yarn lint:all
+
+      - name: Test
+        if: steps.probe.outputs.found == 'true'
+        run: yarn test
+
+      - name: Build
+        if: steps.probe.outputs.found == 'true'
+        run: yarn build:all
+
+  leak-gate:
+    name: Leak gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # This repository is public and is produced from a private portal repo.
+      # These patterns are what that portal carries and this one must never gain.
+      - name: Scan for internal identifiers and secrets
+        run: |
+          patterns=(
+            'zntl'
+            '\.internal\b'
+            '\.lan\b'
+            'C:/code'
+            'C:\\Users'
+            'pve01'
+            'POSTGRES_PASSWORD'
+            'GITHUB_TOKEN='
+            'ghp_[A-Za-z0-9]{36}'
+            'github_pat_[A-Za-z0-9_]{22,}'
+            '"file:'
+            '@internal/'
+          )
+          status=0
+          for p in "${patterns[@]}"; do
+            if git grep -nIE -- "$p" -- . ':!.github/workflows/ci.yml' ':!yarn.lock'; then
+              echo "::error::leak gate matched: $p"
+              status=1
+            fi
+          done
+          exit $status

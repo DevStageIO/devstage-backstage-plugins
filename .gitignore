@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Yarn — every workspace has its own .yarn/, so these must not be root-anchored
+.pnp.*
+**/.yarn/*
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/patches
+!**/.yarn/sdks
+
+# Build output
+dist
+dist-types
+coverage
+site
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.test
+*.local.yaml
+*-credentials.yaml
+
+# Editors / OS
+.DS_Store
+*.swp
+
+# Never publish planning material to this repo — it lives in the portal repo
+.plan/
+.arch/

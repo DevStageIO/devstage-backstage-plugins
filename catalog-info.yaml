@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: devstage-backstage-plugins
+  description: Open-source Backstage plugins published under the @devstage npm scope
+  annotations:
+    github.com/project-slug: DevStageIO/devstage-backstage-plugins
+  tags:
+    - backstage
+    - plugin
+    - typescript
+spec:
+  type: library
+  lifecycle: experimental
+  owner: zentala
