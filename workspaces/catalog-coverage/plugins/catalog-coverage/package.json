@@ -32,6 +32,13 @@
     ]
   },
   "sideEffects": false,
+  "jest": {
+    "//": "backstage-cli sets rootDir to src/, so a test under dev/ is collected by nobody and passes by never running.",
+    "roots": [
+      "<rootDir>",
+      "<rootDir>/../dev"
+    ]
+  },
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
@@ -58,6 +65,7 @@
     "react-use": "^17.5.0"
   },
   "devDependencies": {
+    "@backstage/catalog-client": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@backstage/config": "backstage:^",
     "@backstage/core-app-api": "backstage:^",

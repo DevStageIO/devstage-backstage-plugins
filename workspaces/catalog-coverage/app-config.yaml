@@ -1,0 +1,60 @@
+# Config for the standalone dev harness of the catalog-coverage plugin pair.
+#
+# This is a development file. It must never contain a real token, a real
+# internal hostname, or a private repository — everything secret comes from the
+# environment, everything else is a public placeholder.
+app:
+  title: catalog-coverage dev
+  baseUrl: http://localhost:3000
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  cors:
+    origin: http://localhost:3000
+  # In-memory SQLite: the harness must not need Postgres or docker-compose.
+  # The suggestion cache is rebuilt on every restart, which is what you want
+  # while developing the enrichment path.
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+
+# The plugin projects catalog Locations into coverage rows, so the harness
+# needs some. These are public repositories, deliberately: one that has a
+# catalog-info.yaml (renders as `present`) and one that does not (renders as
+# `missing`), which is the pair of states the page exists to show.
+catalog:
+  locations:
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/catalog-info.yaml
+    - type: url
+      target: https://github.com/backstage/community-plugins/blob/main/catalog-info.yaml
+
+catalogCoverage:
+  # A GitHub token is optional for reading the coverage table and required for
+  # everything that writes (onboarding a repo via PR or direct commit) and for
+  # the metadata columns (stars, pushed-at, branch protection).
+  # Scopes: `public_repo` to read, plus `repo` for private repositories.
+  token: ${GITHUB_TOKEN}
+
+  # Fail-closed by ADR-019: an empty or absent list denies every mutation.
+  # Onboarding a repo is a write to someone's repository, so the allowlist is
+  # opt-in per owner, never a wildcard.
+  allowedOwners:
+    - backstage
+
+  # Direct commit skips the PR and writes straight to the default branch.
+  # Off here on purpose — the harness should default to the reviewable path.
+  allowDirectCommit: false
+  detectBranchProtection: true
+
+  # Pre-filled in the onboarding modal. `ref` is an entity name, not an
+  # entity ref: `platform-team`, not `group:default/platform-team`.
+  defaultOwner:
+    kind: group
+    ref: platform-team
+
+  # Caps the parallel GitHub + catalog fan-out for one page load. Raising it
+  # trades page latency against GitHub's secondary rate limit.
+  maxConcurrency: 10
