@@ -90,8 +90,14 @@ jobs:
             '@internal/'
           )
           status=0
+          # Excluded: this file (it contains the patterns), lockfiles, and the
+          # vendored yarn release — third-party bundles whose minified text hits
+          # '.internal' and '"file:' with no relation to anything of ours.
           for p in "${patterns[@]}"; do
-            if git grep -nIE -- "$p" -- . ':!.github/workflows/ci.yml' ':!yarn.lock'; then
+            if git grep -nIE -- "$p" -- . \
+              ':!.github/workflows/ci.yml' \
+              ':(glob,exclude)**/yarn.lock' \
+              ':(glob,exclude)**/.yarn/**'; then
               echo "::error::leak gate matched: $p"
               status=1
             fi
