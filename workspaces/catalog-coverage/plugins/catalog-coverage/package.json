@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/DevStageIO/devstage-backstage-plugins",
-    "directory": "workspaces/catalog-coverage/plugins\\catalog-coverage"
+    "directory": "workspaces/catalog-coverage/plugins/catalog-coverage"
   },
   "configSchema": "config.d.ts",
   "publishConfig": {
